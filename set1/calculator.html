@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="container mx-auto p-8 bg-white rounded-lg shadow-lg max-w-md">
+        <div id="registerSection">
+            <h2 class="text-2xl font-bold mb-4 text-center">Register</h2>
+            <form id="registerForm" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-gray-700">Name</label>
+                    <input type="text" id="name" name="name" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700">Email</label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                </div>
+                <div>
+                    <label for="password" class="block text-gray-700">Password</label>
+                    <input type="password" id="password" name="password" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                </div>
+                <div>
+                    <label for="operation" class="block text-gray-700">Choose Operation</label>
+                    <select id="operation" name="operation" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                        <option value="Addition">Addition</option>
+                        <option value="Subtraction">Subtraction</option>
+                        <option value="Multiplication">Multiplication</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Submit</button>
+            </form>
+        </div>
+
+        <div id="loginSection" class="hidden">
+            <h2 class="text-2xl font-bold mb-4 text-center">Login</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="loginEmail" class="block text-gray-700">Email</label>
+                    <input type="email" id="loginEmail" name="loginEmail" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-gray-700">Password</label>
+                    <input type="password" id="loginPassword" name="loginPassword" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300">Login</button>
+            </form>
+        </div>
+
+        <div id="welcomeSection" class="hidden">
+            <h2 id="welcomeMessage" class="text-2xl font-bold mb-4 text-center"></h2>
+            <div id="additionSection" class="space-y-4">
+                <div>
+                    <label for="input1" class="block text-gray-700">Input 1</label>
+                    <input type="number" id="input1" name="input1" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+                <div>
+                    <label for="input2" class="block text-gray-700">Input 2</label>
+                    <input type="number" id="input2" name="input2" class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600">
+                </div>
+                <button id="calculateButton" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition duration-300">Calculate</button>
+                <p class="text-center">Output: <span id="output" class="font-bold"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const registerForm = document.getElementById('registerForm');
+        const loginForm = document.getElementById('loginForm');
+        const registerSection = document.getElementById('registerSection');
+        const loginSection = document.getElementById('loginSection');
+        const welcomeSection = document.getElementById('welcomeSection');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        const additionSection = document.getElementById('additionSection');
+        const calculateButton = document.getElementById('calculateButton');
+        const output = document.getElementById('output');
+
+        let users = [];
+
+        registerForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = registerForm.name.value;
+            const email = registerForm.email.value;
+            const password = registerForm.password.value;
+            const operation = registerForm.operation.value;
+
+            users.push({ name, email, password, operation });
+            alert('Registration successful! Redirecting to login page...');
+            registerForm.reset();
+            registerSection.classList.add('hidden');
+            loginSection.classList.remove('hidden');
+        });
+
+        loginForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const email = loginForm.loginEmail.value;
+            const password = loginForm.loginPassword.value;
+
+            const user = users.find(user => user.email === email && user.password === password);
+
+            if (user) {
+                welcomeSection.style.display = 'block';
+                welcomeMessage.textContent = `You have registered for the ${user.operation}. Welcome ${user.name}!`;
+                loginSection.classList.add('hidden');
+                welcomeSection.classList.remove('hidden');
+
+                if (user.operation === 'Addition') {
+                    additionSection.style.display = 'block';
+                } else {
+                    additionSection.style.display = 'none';
+                }
+            } else {
+                alert('Invalid login credentials');
+            }
+
+            loginForm.reset();
+        });
+
+        calculateButton.addEventListener('click', function() {
+            const input1 = parseFloat(document.getElementById('input1').value);
+            const input2 = parseFloat(document.getElementById('input2').value);
+            const result = input1 + input2;
+
+            output.textContent = result;
+        });
+    </script>
+</body>
+</html>
